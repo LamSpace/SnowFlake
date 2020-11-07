@@ -1,4 +1,4 @@
-## SnowFlake-spring-boot-autoconfigure
+## SnowFlake
 
 #### 介绍（Description）
 
