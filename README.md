@@ -4,7 +4,7 @@
 
 > SnowFlake是笔者编写的基于Spring应用的一个插件, 该插件能够在一个应用中生成为每一条记录生成一个全局唯一的ID，即便是在分布式应用中。
 
-> SnowFlake is a plugin based on spring boot application, which can generate a global unique id for each record in your database, even in distributed application.
+> SnowFlake is a plugin based on spring application, which can generate a global unique id for each record in your database, even in distributed application.
 
 ***
 
