@@ -17,6 +17,8 @@
 package com.github;
 
 import java.util.concurrent.locks.StampedLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Default implementation of {@link com.github.Generator}. <code>com.github.DefaultGenerator</code>
@@ -35,6 +37,9 @@ public class DefaultGenerator implements com.github.Generator {
     private long lastTimestamp = -1L;
 
     public DefaultGenerator(SnowFlakeConfiguration configuration) {
+        Logger logger = Logger.getLogger("com.github.generator");
+        logger.setLevel(Level.INFO);
+        logger.info("Initialized Default Generator for SnowFlake.");
         this.configuration = configuration;
     }
 
