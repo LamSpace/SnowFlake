@@ -20,7 +20,7 @@
     <groupId>com.github.zon-g</groupId>
     <artifactId>SnowFlake</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>2.0.0</version>
 
     <name>SnowFlake-spring-boot-starter</name>
     <description>A simple starter for spring boot application</description>
