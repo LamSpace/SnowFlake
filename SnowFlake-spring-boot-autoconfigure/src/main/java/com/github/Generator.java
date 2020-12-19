@@ -23,6 +23,12 @@ package com.github;
  */
 public interface Generator {
 
+    /**
+     * Returns a global unique identity using <code>SnowFlake</code> algorithm
+     * proposed by Twitter.
+     *
+     * @return a global unique identity
+     */
     long nextId();
 
 }

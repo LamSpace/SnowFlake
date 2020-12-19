@@ -63,6 +63,11 @@ public class SnowFlakeProperties {
      */
     private long dataCenterId = 1L;
 
+    /**
+     * pool size of {@link com.github.CachedGenerator}.
+     */
+    private int poolSize = 10;
+
     public long getInitialTimestamp() {
         return initialTimestamp;
     }
@@ -101,6 +106,14 @@ public class SnowFlakeProperties {
 
     public void setDataCenterId(long dataCenterId) {
         this.dataCenterId = dataCenterId;
+    }
+
+    public int getPoolSize() {
+        return poolSize;
+    }
+
+    public void setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
     }
 
 }

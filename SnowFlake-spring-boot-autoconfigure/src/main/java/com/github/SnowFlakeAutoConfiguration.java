@@ -18,7 +18,7 @@ package com.github;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,9 +37,25 @@ public class SnowFlakeAutoConfiguration {
     private com.github.SnowFlakeProperties properties;
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = SnowFlakeProperties.SNOWFLAKE_PREFIX,
+            name = {"enable-cached", "enable-atomic"}, havingValue = "false",
+            matchIfMissing = true)
     public com.github.Generator getGenerator() {
         return new com.github.DefaultGenerator(com.github.SnowFlakeConfiguration.parse(properties));
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = SnowFlakeProperties.SNOWFLAKE_PREFIX,
+            name = "enable-cached", havingValue = "true")
+    public Generator getQueuedGenerator() {
+        return new CachedGenerator(SnowFlakeConfiguration.parse(properties));
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = SnowFlakeProperties.SNOWFLAKE_PREFIX,
+            name = "enable-atomic", havingValue = "true")
+    public Generator getAtomicGenerator() {
+        return new AtomicGenerator(SnowFlakeConfiguration.parse(properties));
     }
 
 }

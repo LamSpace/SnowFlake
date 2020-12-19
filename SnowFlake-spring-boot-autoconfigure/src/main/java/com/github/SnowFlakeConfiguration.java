@@ -47,6 +47,8 @@ public class SnowFlakeConfiguration {
 
     private long dataCenterId;
 
+    private int poolSize;
+
     public static SnowFlakeConfiguration parse(com.github.SnowFlakeProperties properties) {
         SnowFlakeConfiguration configuration = new SnowFlakeConfiguration();
         configuration.INITIAL_TIME_STAMP = properties.getInitialTimestamp();
@@ -66,6 +68,7 @@ public class SnowFlakeConfiguration {
         configuration.dataCenterId = properties.getDataCenterId();
         configuration.DATA_CENTER_ID_OFFSET = configuration.SEQUENCE_BITS + configuration.WORK_ID_BITS;
         configuration.TIME_STAMP_OFFSET = configuration.DATA_CENTER_ID_OFFSET + configuration.DATA_CENTER_ID_BITS;
+        configuration.poolSize = properties.getPoolSize();
         return configuration;
     }
 
@@ -151,6 +154,14 @@ public class SnowFlakeConfiguration {
 
     public void setDataCenterId(long dataCenterId) {
         this.dataCenterId = dataCenterId;
+    }
+
+    public int getPoolSize() {
+        return poolSize;
+    }
+
+    public void setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
     }
 
 }

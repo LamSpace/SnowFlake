@@ -43,10 +43,6 @@ public class DefaultGenerator implements com.github.Generator {
         this.configuration = configuration;
     }
 
-    /**
-     * Gets the next id.
-     * @return a next distinct id
-     */
     public long nextId() {
         long stamp = lock.writeLock(), ans;
         try {

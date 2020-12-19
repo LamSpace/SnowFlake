@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "name": "snowflake",
+      "type": "com.github.SnowFlakeProperties",
+      "sourceType": "com.github.SnowFlakeProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "snowflake.enable-cached",
+      "type": "java.lang.Boolean",
+      "description": "enable CachedGenerator",
+      "sourceType": "com.github.SnowFlakeProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "snowflake.enable-atomic",
+      "type": "java.lang.Boolean",
+      "description": "enable AtomicGenerator",
+      "sourceType": "com.github.SnowFlakeProperties",
+      "defaultValue": false
+    }
+  ],
+  "hints": []
+}
