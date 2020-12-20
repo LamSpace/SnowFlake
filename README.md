@@ -8,7 +8,7 @@
 >
 > * **DefaultGenerator** 是生成器接口的默认实现，即默认支持的生成器。该生成器采用**显示锁**实现，是SnowFlake算法的基本实现形式。
 > * **CachedGenerator** 在 **DefaultGenerator** 的基础上，使用 **ConcurrentLinkedQueue** 作为并发缓存容器实现并发场景下安全获取生成的id，即该生成器是线程安全的生成器。
-> * **AtomicGenerator** 则采用 **AtomicLong** 作为实现工具。相比较前面两种实现方式，**AtomicGenerator** 的实现采用 **CAS + 自旋** 的方式达到了 **无锁** 的实现，具有明显的改进。
+> * **AtomicGenerator** 则采用 **AtomicStampedReference** 作为实现工具。相比较前面两种实现方式，**AtomicGenerator** 的实现采用 **CAS + 自旋** 的方式达到了 **无锁** 的实现，具有明显的改进。
 
 > SnowFlake is a plugin based on spring application, which can generate a global unique id for each record in your database, even in distributed application. This plugin implements the SnowFlake algorithm proposed by Twitter in a spring-boot-starter manner such that user(s) can use this plugin in his/her spring-boot application easily.
 >
@@ -16,11 +16,15 @@
 >
 > * **DefaultGenerator** is the default implementation of **Generator** interface by using explicit lock like **StampLock**, regarding as the basic implementation of interface **Generator**.
 > * **CachedGenerator** adopts **ConcurrentLinkedQueue** as a concurrent cached container to acquire identity based on **DefaultGenerator**, namely it's a **thread-safe** implementation.
-> * **AtomicGenerator** Generates identities using **AtomicLong** as the tools. It is **Lock Free** by using **CAS + Spin** than **DefaultGenerator** and **CachedGenerator**.
+> * **AtomicGenerator** Generates identities using **AtomicStampedReference** as the tools. It is **Lock Free** by using **CAS + Spin** than **DefaultGenerator** and **CachedGenerator**.
 
 ***
 
 #### 版本（Versions）
+
+##### V2.0.1
+
+> V2.0.1 将 **AtomicGenerator** 的实现由 **AtomicLong** 切换成了 **AtomicStampedReference**。
 
 ##### V2.0.0
 
