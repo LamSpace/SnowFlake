@@ -27,7 +27,7 @@ public class SnowFlakeConfiguration {
 
     private final long WORKER_ID_OFFSET = SEQUENCE_BITS;
 
-    private final long SEQUENCE_MASK = ~(-1 << SEQUENCE_BITS);
+    private final int SEQUENCE_MASK = ~(-1 << SEQUENCE_BITS);
 
     private long INITIAL_TIME_STAMP;
 
@@ -80,7 +80,7 @@ public class SnowFlakeConfiguration {
         return WORKER_ID_OFFSET;
     }
 
-    public long getSEQUENCE_MASK() {
+    public int getSEQUENCE_MASK() {
         return SEQUENCE_MASK;
     }
 

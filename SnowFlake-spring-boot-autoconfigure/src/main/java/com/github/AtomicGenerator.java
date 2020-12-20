@@ -16,7 +16,7 @@
 
 package com.github;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicStampedReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,9 +37,7 @@ public class AtomicGenerator implements Generator {
 
     private final long CONSTANT_WORKER_ID;
 
-    private AtomicLong sequence = new AtomicLong(0L);
-
-    private AtomicLong lastTimestamp = new AtomicLong(-1L);
+    private final AtomicStampedReference<Long> reference = new AtomicStampedReference<>(-1L, 0);
 
     public AtomicGenerator(SnowFlakeConfiguration configuration) {
         Logger logger = Logger.getLogger("con.github.generator");
@@ -51,32 +49,27 @@ public class AtomicGenerator implements Generator {
 
     @Override
     public long nextId() {
-        long newTimestamp, oldTimestamp, oldSequence, newSequence;
-        do {
-            oldTimestamp = lastTimestamp.get();
-            oldSequence = sequence.get();
-            newTimestamp = System.currentTimeMillis();
-            if (newTimestamp < oldTimestamp) {
+        Long newTimestamp, oldTimestamp;
+        int oldSequence, newSequence;
+        for (; ; ) {
+            oldTimestamp = reference.getReference();
+            oldSequence = reference.getStamp();
+            newTimestamp = new Long(System.currentTimeMillis());
+            if (newTimestamp.longValue() < oldTimestamp.longValue()) {
                 throw new RuntimeException("Current time is smaller than last timestamp");
             }
-            if (newTimestamp == oldTimestamp) {
-                newSequence = (oldSequence + 1L) & configuration.getSEQUENCE_MASK();
-                if (newSequence == 0L) {
-                    newTimestamp = nextMills(oldTimestamp);
+            if (newTimestamp.longValue() == oldTimestamp.longValue()) {
+                newSequence = (oldSequence + 1) & configuration.getSEQUENCE_MASK();
+                if (newSequence == 0) {
+                    newTimestamp = new Long(nextMills(oldTimestamp));
                 }
             } else {
-                newSequence = 0L;
+                newSequence = 0;
             }
-            // As you can see, there are two AtomicLong type fields. Hence if any of them, or both of them, fail to set
-            // to the new value using method compareAndSet(long expected, long newVal), it means other thread(s) changed
-            // old value of both AtomicLong type filed.
-            //
-            // So the only way to exit the do-loop is that both of AtomicLong.compareAndSet(long expected, long newValue) return true.
-            //
-            // '||' here means if any of both returns false, just try again to generate the identity.
-        } while (!lastTimestamp.compareAndSet(oldTimestamp, newTimestamp) || !sequence.compareAndSet(oldSequence, newSequence));
-        return ((newTimestamp - configuration.getINITIAL_TIME_STAMP()) << configuration.getTIME_STAMP_OFFSET()) |
-                this.CONSTANT_DATA_CENTER | this.CONSTANT_WORKER_ID | newSequence;
+            if (reference.compareAndSet(oldTimestamp, newTimestamp, oldSequence, newSequence))
+                return ((newTimestamp - configuration.getINITIAL_TIME_STAMP()) << configuration.getTIME_STAMP_OFFSET()) |
+                        this.CONSTANT_DATA_CENTER | this.CONSTANT_WORKER_ID | newSequence;
+        }
     }
 
     private long nextMills(long lastTimestamp) {
